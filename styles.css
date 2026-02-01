@@ -5,3 +5,13 @@ h1 {
   color: navy;
   margin-left: 10px;
 }
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-colour: red;
+}
+.navbar li {
+  float: left;
+}
