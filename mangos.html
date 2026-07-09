@@ -1,13 +1,615 @@
-<html>
-  <head>
-    <title>MangOS</title>
-    <link rel="icon" type="image/png" href="/sources/favicon.png">
-  </head>
-  <body>
-    <h1>MangOS is an operating system for x86 machines</h1>
-    <footer>
-      <p>Copyright FruitSalad Systems, 2026</p>
-      <p>Canada</p>
-    </footer>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mangOS — an operating system built for how you actually work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --black: #0B0A08;
+    --charcoal: #17140F;
+    --charcoal-2: #221D14;
+    --line: #33291B;
+    --orange: #FF6A13;
+    --orange-light: #FFB25C;
+    --orange-dim: #C9520E;
+    --white: #FBF6EE;
+    --muted: #B3A896;
+    --muted-2: #7A7061;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 32px; }
+
+  ::selection{ background: var(--orange); color: var(--black); }
+
+  /* ---------- diced grid pattern ---------- */
+  .dice-pattern{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(45deg, rgba(255,106,19,0.09) 1px, transparent 1px),
+      linear-gradient(-45deg, rgba(255,106,19,0.09) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events:none;
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: rgba(11,10,8,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 32px; max-width:1160px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo-mark{ width:26px; height:26px; }
+  .logo-text{
+    font-family: var(--font-display); font-weight:600; font-size:20px;
+    letter-spacing:-0.02em; color: var(--white);
+  }
+  .logo-text span{ color: var(--orange); }
+  .nav-links{ display:flex; gap:36px; }
+  .nav-links a{
+    font-size:14px; color: var(--muted); transition: color .2s;
+  }
+  .nav-links a:hover{ color: var(--orange-light); }
+  .nav-right{ display:flex; align-items:center; gap:20px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:11px 22px; border-radius:6px; font-size:14px; font-weight:600;
+    cursor:pointer; border:1px solid transparent; transition: all .18s;
+    white-space:nowrap;
+  }
+  .btn-primary{ background: var(--orange); color:#1A0C02; }
+  .btn-primary:hover{ background: var(--orange-light); transform:translateY(-1px); }
+  .btn-outline{ border-color: var(--line); color: var(--white); }
+  .btn-outline:hover{ border-color: var(--orange); color: var(--orange-light); }
+  .menu-toggle{ display:none; background:none; border:none; color:var(--white); font-size:24px; cursor:pointer; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; padding:110px 0 90px; overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-glow{
+    position:absolute; top:-200px; left:50%; transform:translateX(-50%);
+    width:900px; height:500px; border-radius:50%;
+    background: radial-gradient(closest-side, rgba(255,106,19,0.22), transparent 70%);
+    pointer-events:none;
+  }
+  .hero-inner{ position:relative; z-index:2; text-align:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--font-mono); font-size:12px; letter-spacing:0.06em;
+    color: var(--orange-light); border:1px solid var(--line);
+    padding:6px 14px; border-radius:100px; margin-bottom:28px;
+    background: var(--charcoal);
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--orange); }
+  h1.hero-title{
+    font-family: var(--font-display);
+    font-weight:500;
+    font-size:clamp(40px, 6vw, 74px);
+    line-height:1.05;
+    letter-spacing:-0.02em;
+    max-width:820px;
+    margin:0 auto 24px;
+  }
+  h1.hero-title em{ font-style:italic; color: var(--orange); }
+  .hero-sub{
+    max-width:560px; margin:0 auto 40px; color: var(--muted);
+    font-size:17px;
+  }
+  .hero-ctas{ display:flex; gap:16px; justify-content:center; margin-bottom:80px; }
+  .btn-lg{ padding:14px 28px; font-size:15px; border-radius:8px; }
+
+  /* ---------- desktop mockup ---------- */
+  .mockup-frame{
+    position:relative; max-width:900px; margin:0 auto;
+    border-radius:14px; overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7);
+  }
+  .mockup-bar{
+    display:flex; align-items:center; gap:8px;
+    background: var(--charcoal-2); padding:12px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .mockup-dot{ width:10px; height:10px; border-radius:50%; }
+  .mockup-title{
+    font-family: var(--font-mono); font-size:12px; color: var(--muted-2);
+    margin:0 auto; transform:translateX(-16px);
+  }
+  .mockup-body{
+    display:grid; grid-template-columns:200px 1fr;
+    background: var(--charcoal); min-height:380px;
+  }
+  .mockup-sidebar{
+    border-right:1px solid var(--line); padding:20px 16px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .mockup-side-item{
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; color: var(--muted); padding:9px 10px; border-radius:6px;
+  }
+  .mockup-side-item.active{ background: rgba(255,106,19,0.14); color: var(--orange-light); }
+  .mockup-side-icon{ width:14px; height:14px; border-radius:3px; background: var(--line); flex-shrink:0; }
+  .mockup-side-item.active .mockup-side-icon{ background: var(--orange); }
+  .mockup-content{ padding:28px; }
+  .mockup-grid{
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:16px;
+  }
+  .mockup-app{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .mockup-app-icon{
+    width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mockup-app-label{ font-size:11px; color: var(--muted-2); }
+  .mockup-dock{
+    display:flex; justify-content:center; gap:12px;
+    padding:14px; border-top:1px solid var(--line); background: var(--charcoal-2);
+  }
+  .dock-icon{ width:34px; height:34px; border-radius:9px; }
+
+  /* ---------- section headers ---------- */
+  .section{ padding:96px 0; border-bottom:1px solid var(--line); }
+  .section-head{ max-width:600px; margin-bottom:56px; }
+  .section-label{
+    font-family: var(--font-mono); font-size:12px; color: var(--orange);
+    letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px; display:block;
+  }
+  .section-title{
+    font-family: var(--font-display); font-weight:500;
+    font-size:clamp(28px, 3.4vw, 40px); letter-spacing:-0.01em; margin-bottom:16px;
+  }
+  .section-desc{ color: var(--muted); font-size:16px; max-width:520px; }
+
+  /* ---------- features ---------- */
+  .feature-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:1px;
+    background: var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  }
+  .feature-card{ background: var(--charcoal); padding:32px 26px; }
+  .feature-num{ font-family: var(--font-mono); font-size:12px; color: var(--muted-2); margin-bottom:20px; }
+  .feature-icon{ width:32px; height:32px; margin-bottom:20px; }
+  .feature-card h3{
+    font-family: var(--font-display); font-weight:500; font-size:19px; margin-bottom:10px;
+  }
+  .feature-card p{ color: var(--muted); font-size:14px; line-height:1.6; }
+
+  /* ---------- interface showcase ---------- */
+  .showcase{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+  .showcase-visual{
+    background: var(--charcoal); border:1px solid var(--line); border-radius:12px;
+    padding:32px; position:relative; overflow:hidden;
+  }
+  .showcase-list{ display:flex; flex-direction:column; gap:28px; }
+  .showcase-item{ display:flex; gap:16px; }
+  .showcase-check{
+    width:22px; height:22px; border-radius:50%; background: rgba(255,106,19,0.14);
+    color: var(--orange); display:flex; align-items:center; justify-content:center;
+    font-size:12px; flex-shrink:0; margin-top:2px;
+  }
+  .showcase-item h4{ font-size:16px; font-weight:600; margin-bottom:4px; }
+  .showcase-item p{ color: var(--muted); font-size:14px; }
+
+  .dock-mini{
+    display:flex; justify-content:center; gap:10px; padding:16px;
+    background: var(--charcoal-2); border-radius:10px; margin-top:20px;
+  }
+  .window-stack{ position:relative; height:220px; }
+  .stack-window{
+    position:absolute; border-radius:8px; border:1px solid var(--line);
+    background: var(--black);
+  }
+  .stack-window .bar{ height:22px; background: var(--charcoal-2); border-radius:8px 8px 0 0; display:flex; align-items:center; gap:5px; padding:0 10px;}
+  .stack-window .b{ width:6px; height:6px; border-radius:50%; }
+
+  /* ---------- terminal / spec strip ---------- */
+  .terminal{
+    background: var(--charcoal); border:1px solid var(--line); border-radius:12px;
+    font-family: var(--font-mono); font-size:13.5px; overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px; padding:12px 16px;
+    border-bottom:1px solid var(--line); background: var(--charcoal-2);
+  }
+  .terminal-body{ padding:28px 32px; color: var(--muted); }
+  .terminal-body .prompt{ color: var(--orange-light); }
+  .terminal-body .cmd{ color: var(--white); }
+  .spec-line{ display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--line); max-width:520px; }
+  .spec-line:last-child{ border-bottom:none; }
+  .spec-line .val{ color: var(--orange-light); }
+
+  /* ---------- download ---------- */
+  .download-section{ text-align:center; }
+  .platform-row{
+    display:flex; justify-content:center; gap:16px; margin-top:40px; flex-wrap:wrap;
+  }
+  .platform-card{
+    width:200px; padding:26px 20px; background: var(--charcoal);
+    border:1px solid var(--line); border-radius:12px; transition: border-color .2s, transform .2s;
+  }
+  .platform-card:hover{ border-color: var(--orange); transform:translateY(-3px); }
+  .platform-icon{ width:28px; height:28px; margin:0 auto 16px; }
+  .platform-card h4{ font-size:15px; margin-bottom:4px; }
+  .platform-card p{ font-size:12px; color: var(--muted-2); font-family: var(--font-mono); }
+  .version-note{
+    margin-top:32px; font-family: var(--font-mono); font-size:12px; color: var(--muted-2);
+  }
+
+  /* ---------- footer ---------- */
+  footer{ padding:72px 0 32px; }
+  .footer-top{
+    display:grid; grid-template-columns:1.4fr repeat(4, 1fr); gap:32px;
+    padding-bottom:56px; border-bottom:1px solid var(--line);
+  }
+  .footer-brand p{ color: var(--muted); font-size:13.5px; margin-top:14px; max-width:220px; }
+  .footer-col h5{
+    font-family: var(--font-mono); font-size:12px; letter-spacing:0.05em;
+    text-transform:uppercase; color: var(--muted-2); margin-bottom:18px;
+  }
+  .footer-col ul{ display:flex; flex-direction:column; gap:12px; }
+  .footer-col a{ font-size:14px; color: var(--muted); transition:color .18s; }
+  .footer-col a:hover{ color: var(--orange-light); }
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:28px; flex-wrap:wrap; gap:16px;
+  }
+  .footer-bottom p{ font-size:13px; color: var(--muted-2); }
+  .social-row{ display:flex; gap:10px; }
+  .social-btn{
+    width:36px; height:36px; border-radius:8px; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--muted); font-size:13px; font-family:var(--font-mono); transition: all .18s;
+  }
+  .social-btn:hover{ border-color: var(--orange); color: var(--orange-light); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 860px){
+    .nav-links{ display:none; }
+    .menu-toggle{ display:block; }
+    .feature-grid{ grid-template-columns:repeat(2,1fr); }
+    .showcase{ grid-template-columns:1fr; }
+    .mockup-body{ grid-template-columns:1fr; }
+    .mockup-sidebar{ display:none; }
+    .footer-top{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 520px){
+    .wrap{ padding:0 20px; }
+    .hero{ padding:80px 0 60px; }
+    .hero-ctas{ flex-direction:column; align-items:center; }
+    .feature-grid{ grid-template-columns:1fr; }
+    .mockup-grid{ grid-template-columns:repeat(3,1fr); }
+    .footer-top{ grid-template-columns:1fr; gap:36px; }
+    .footer-bottom{ flex-direction:column; align-items:flex-start; }
+    section.section{ padding:64px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" stroke="#FF6A13" stroke-width="1.5"/>
+        <path d="M16 1 L16 31 M1 16 L31 16 M5 5 L27 27 M27 5 L5 27" stroke="#FF6A13" stroke-width="0.75" opacity="0.5"/>
+        <circle cx="16" cy="16" r="4" fill="#FF6A13"/>
+      </svg>
+      <span class="logo-text">mang<span>OS</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#interface">Interface</a></li>
+      <li><a href="#specs">Specs</a></li>
+      <li><a href="#download">Download</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#download" class="btn btn-primary">Get mangOS</a>
+      <button class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="dice-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="dot"></span>mangOS 2.4 &mdash; codename &ldquo;Ripe&rdquo;</span>
+    <h1 class="hero-title">An operating system built for how you <em>actually</em> work.</h1>
+    <p class="hero-sub">mangOS pairs a fast, minimal core with an interface that adapts to you &mdash; no bloat, no friction, no learning curve you didn't ask for.</p>
+    <div class="hero-ctas">
+      <a href="#download" class="btn btn-primary btn-lg">Download for free</a>
+      <a href="#features" class="btn btn-outline btn-lg">See what's inside</a>
+    </div>
+
+    <div class="mockup-frame">
+      <div class="mockup-bar">
+        <div class="mockup-dot" style="background:var(--orange)"></div>
+        <div class="mockup-dot" style="background:var(--orange-light)"></div>
+        <div class="mockup-dot" style="background:var(--orange-dim)"></div>
+        <p class="mockup-title">mangOS &mdash; Home</p>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-sidebar">
+          <div class="mockup-side-item active"><span class="mockup-side-icon"></span>Home</div>
+          <div class="mockup-side-item"><span class="mockup-side-icon"></span>Files</div>
+          <div class="mockup-side-item"><span class="mockup-side-icon"></span>Apps</div>
+          <div class="mockup-side-item"><span class="mockup-side-icon"></span>Workspaces</div>
+          <div class="mockup-side-item"><span class="mockup-side-icon"></span>Settings</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-grid" id="appGrid"></div>
+        </div>
+      </div>
+      <div class="mockup-dock" id="dockRow"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-label">Features</span>
+      <h2 class="section-title">Everything it does, it does on purpose.</h2>
+      <p class="section-desc">No preinstalled clutter, no background processes you didn't approve. Just the parts of an OS that earn their place.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <p class="feature-num">01</p>
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none"><path d="M16 3 L16 16 L26 21" stroke="#FF6A13" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="16" r="13" stroke="#FF6A13" stroke-width="2"/></svg>
+        <h3>Instant boot</h3>
+        <p>Go from cold start to desktop in under four seconds, every time &mdash; no progress bar to stare at.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">02</p>
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none"><rect x="6" y="6" width="9" height="9" fill="#FF6A13"/><rect x="17" y="6" width="9" height="9" stroke="#FF6A13" stroke-width="2"/><rect x="6" y="17" width="9" height="9" stroke="#FF6A13" stroke-width="2"/><rect x="17" y="17" width="9" height="9" fill="#FF6A13"/></svg>
+        <h3>Adaptive workspaces</h3>
+        <p>Windows and apps rearrange themselves around what you're doing, not the other way around.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">03</p>
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none"><path d="M16 4 L26 8 V15 C26 22 21 27 16 29 C11 27 6 22 6 15 V8 Z" stroke="#FF6A13" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>Built-in privacy shield</h3>
+        <p>Every app runs sandboxed by default. Nothing phones home without you knowing about it first.</p>
+      </div>
+      <div class="feature-card">
+        <p class="feature-num">04</p>
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none"><circle cx="14" cy="14" r="9" stroke="#FF6A13" stroke-width="2"/><path d="M20.5 20.5 L27 27" stroke="#FF6A13" stroke-width="2" stroke-linecap="round"/></svg>
+        <h3>One command, everything</h3>
+        <p>A universal search bar that opens apps, finds files, and runs system commands from one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="interface">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-label">Interface</span>
+      <h2 class="section-title">Designed to stay out of the way.</h2>
+    </div>
+    <div class="showcase">
+      <div class="showcase-visual">
+        <div class="window-stack">
+          <div class="stack-window" style="top:10px; left:10px; width:78%; height:130px; z-index:2;">
+            <div class="bar"><span class="b" style="background:var(--orange)"></span><span class="b" style="background:var(--orange-light)"></span><span class="b" style="background:var(--orange-dim)"></span></div>
+          </div>
+          <div class="stack-window" style="top:55px; left:70px; width:70%; height:130px; z-index:1; background:var(--charcoal-2);">
+            <div class="bar"><span class="b" style="background:var(--orange)"></span><span class="b" style="background:var(--orange-light)"></span><span class="b" style="background:var(--orange-dim)"></span></div>
+          </div>
+        </div>
+        <div class="dock-mini" id="dockMini"></div>
+      </div>
+      <div class="showcase-list">
+        <div class="showcase-item">
+          <div class="showcase-check">&#10003;</div>
+          <div><h4>Windows remember where they left off</h4><p>Snap, tile, and reopen in the exact layout you last used.</p></div>
+        </div>
+        <div class="showcase-item">
+          <div class="showcase-check">&#10003;</div>
+          <div><h4>A dock that reflects today, not three years ago</h4><p>Only shows what you're actually using &mdash; nothing you forgot you installed.</p></div>
+        </div>
+        <div class="showcase-item">
+          <div class="showcase-check">&#10003;</div>
+          <div><h4>Dark by default</h4><p>Because most of us are working at night anyway. Switch to light mode any time.</p></div>
+        </div>
+        <div class="showcase-item">
+          <div class="showcase-check">&#10003;</div>
+          <div><h4>Consistent everywhere</h4><p>Every system app follows the same shortcuts, spacing, and controls &mdash; learn it once.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="specs">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-label">Specs</span>
+      <h2 class="section-title">The numbers, straight from the system.</h2>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="mockup-dot" style="background:var(--orange)"></div>
+        <div class="mockup-dot" style="background:var(--orange-light)"></div>
+        <div class="mockup-dot" style="background:var(--orange-dim)"></div>
+      </div>
+      <div class="terminal-body">
+        <p><span class="prompt">$</span> <span class="cmd">mangos --about</span></p>
+        <br>
+        <p style="color:var(--white)">mangOS 2.4 &ldquo;Ripe&rdquo;</p>
+        <div style="margin-top:18px;">
+          <div class="spec-line"><span>Boot time</span><span class="val">3.8s</span></div>
+          <div class="spec-line"><span>Idle memory footprint</span><span class="val">412 MB</span></div>
+          <div class="spec-line"><span>Battery impact vs. prior release</span><span class="val">&minus;18%</span></div>
+          <div class="spec-line"><span>Kernel</span><span class="val">mangOS Core 5</span></div>
+          <div class="spec-line"><span>Supported architectures</span><span class="val">x86_64, ARM64</span></div>
+          <div class="spec-line"><span>License</span><span class="val">Open source</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section download-section" id="download">
+  <div class="wrap">
+    <span class="section-label">Download</span>
+    <h2 class="section-title">Get mangOS.</h2>
+    <p class="section-desc" style="margin:0 auto;">Free, open-source, and ready for your machine.</p>
+    <div class="platform-row">
+      <div class="platform-card">
+        <svg class="platform-icon" viewBox="0 0 32 32" fill="none"><rect x="4" y="6" width="24" height="16" rx="2" stroke="#FF6A13" stroke-width="2"/><path d="M11 26 H21 M16 22 V26" stroke="#FF6A13" stroke-width="2"/></svg>
+        <h4>Desktop</h4>
+        <p>x86_64 / ARM64</p>
+      </div>
+      <div class="platform-card">
+        <svg class="platform-icon" viewBox="0 0 32 32" fill="none"><rect x="3" y="9" width="26" height="15" rx="2" stroke="#FF6A13" stroke-width="2"/><path d="M2 26 H30" stroke="#FF6A13" stroke-width="2" stroke-linecap="round"/></svg>
+        <h4>Laptop</h4>
+        <p>x86_64 / ARM64</p>
+      </div>
+      <div class="platform-card">
+        <svg class="platform-icon" viewBox="0 0 32 32" fill="none"><rect x="8" y="3" width="16" height="26" rx="2" stroke="#FF6A13" stroke-width="2"/><circle cx="16" cy="24" r="1.4" fill="#FF6A13"/></svg>
+        <h4>Server</h4>
+        <p>Headless build</p>
+      </div>
+    </div>
+    <p class="version-note">v2.4.0 &middot; 1.1 GB &middot; released July 2026</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <svg class="logo-mark" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="15" stroke="#FF6A13" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="4" fill="#FF6A13"/>
+          </svg>
+          <span class="logo-text">mang<span>OS</span></span>
+        </div>
+        <p>An operating system built for how you actually work. Free and open source.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#interface">Interface</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Community forum</a></li>
+          <li><a href="#">Developer API</a></li>
+          <li><a href="#">System status</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press kit</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+          <li><a href="#">Open source licenses</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 mangOS Project. Built with an open core.</p>
+      <div class="social-row">
+        <a class="social-btn" href="#" aria-label="GitHub">GH</a>
+        <a class="social-btn" href="#" aria-label="X (Twitter)">X</a>
+        <a class="social-btn" href="#" aria-label="Discord">DC</a>
+        <a class="social-btn" href="#" aria-label="Mastodon">MA</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const appNames = ['Files','Mail','Terminal','Notes','Browser','Music','Photos','Calendar','Store','Settings'];
+  const appGrid = document.getElementById('appGrid');
+  appNames.forEach((name, i) => {
+    const shades = ['#FF6A13','#FFB25C','#C9520E','#33291B'];
+    const color = shades[i % shades.length];
+    const el = document.createElement('div');
+    el.className = 'mockup-app';
+    el.innerHTML = `<div class="mockup-app-icon" style="background:${color}"></div><span class="mockup-app-label">${name}</span>`;
+    appGrid.appendChild(el);
+  });
+
+  function buildDock(id, count){
+    const dock = document.getElementById(id);
+    const shades = ['#FF6A13','#FFB25C','#C9520E','#33291B','#FF6A13','#FFB25C'];
+    for(let i=0;i<count;i++){
+      const d = document.createElement('div');
+      d.className = 'dock-icon';
+      d.style.background = shades[i % shades.length];
+      dock.appendChild(d);
+    }
+  }
+  buildDock('dockRow', 7);
+  buildDock('dockMini', 6);
+
+  const toggle = document.querySelector('.menu-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  toggle.addEventListener('click', () => {
+    const open = navLinks.style.display === 'flex';
+    navLinks.style.display = open ? 'none' : 'flex';
+    navLinks.style.cssText += open ? '' : 'position:absolute; top:64px; left:0; right:0; flex-direction:column; background:var(--black); padding:20px 32px; border-bottom:1px solid var(--line); gap:16px;';
+  });
+</script>
+
+</body>
 </html>
