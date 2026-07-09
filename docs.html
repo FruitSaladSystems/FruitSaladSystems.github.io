@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fruit Salad Systems - Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --black: #0E0E10;
+    --white: #FFFFFF;
+    --offwhite: #F5F3EE;
+    --line: #E6E3DA;
+    --red: #E8412C;
+    --blue: #2E5EFF;
+    --yellow: #FFC93C;
+    --gray: #6B6B70;
+    --gray-light: #9C9A94;
+    --mango: #FF6A13;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--white); color: var(--black);
+    font-family: var(--font-body); line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img,svg{ display:block; max-width:100%; }
+  ::selection{ background: var(--yellow); color: var(--black); }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+  /* ---------- shared cluster mark (placeholder logo) ---------- */
+  /* This SVG cluster mark is a placeholder brand logo — swap with the real Fruit Salad Systems SVG logo when ready. Reused wherever .brand-mark appears. */
+  .brand-mark circle:nth-child(1){ fill: var(--red); }
+  .brand-mark circle:nth-child(2){ fill: var(--blue); }
+  .brand-mark circle:nth-child(3){ fill: var(--yellow); }
+
+  .dot-divider{ display:flex; gap:6px; align-items:center; }
+  .dot-divider span{ width:7px; height:7px; border-radius:50%; }
+  .dot-divider span:nth-child(1){ background: var(--red); }
+  .dot-divider span:nth-child(2){ background: var(--blue); }
+  .dot-divider span:nth-child(3){ background: var(--yellow); }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50; background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px); border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px; max-width:1180px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo-mark{ width:30px; height:30px; }
+  .logo-text{ font-family:var(--font-display); font-weight:600; font-size:18px; letter-spacing:-0.01em; }
+  .nav-links{ display:flex; gap:34px; }
+  .nav-links a{ font-size:14px; font-weight:500; color: var(--black); position:relative; padding:4px 0; }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:-2px; width:0; height:2px;
+    background: var(--blue); transition:width .2s;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-right{ display:flex; align-items:center; gap:16px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    padding:10px 20px; border-radius:100px; font-size:14px; font-weight:600;
+    cursor:pointer; border:1.5px solid var(--black); transition: all .18s; white-space:nowrap;
+  }
+  .btn-primary{ background: var(--black); color: var(--white); }
+  .btn-primary:hover{ background: var(--blue); border-color:var(--blue); }
+  .btn-outline{ background: transparent; color: var(--black); }
+  .btn-outline:hover{ background: var(--black); color: var(--white); }
+  .menu-toggle{ display:none; background:none; border:none; font-size:22px; cursor:pointer; }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; padding:100px 0 80px; overflow:hidden; }
+  .hero-cluster{ position:absolute; top:-60px; right:-80px; width:520px; opacity:0.9; z-index:0; }
+  .hero-inner{ position:relative; z-index:1; max-width:640px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono);
+    font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color: var(--gray);
+    margin-bottom:24px;
+  }
+  h1.hero-title{
+    font-family: var(--font-display); font-weight:600; font-size:clamp(38px, 5.4vw, 62px);
+    line-height:1.06; letter-spacing:-0.02em; margin-bottom:24px;
+  }
+  h1.hero-title .hl-red{ color: var(--red); }
+  h1.hero-title .hl-blue{ color: var(--blue); }
+  .hero-sub{ font-size:18px; color: var(--gray); max-width:480px; margin-bottom:36px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+
+  /* ---------- section shell ---------- */
+  .section{ padding:88px 0; }
+  .section.alt{ background: var(--offwhite); }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:32px; margin-bottom:48px; flex-wrap:wrap; }
+  .section-label{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color: var(--gray); margin-bottom:12px; display:flex; align-items:center; gap:10px;
+  }
+  .section-title{ font-family:var(--font-display); font-weight:600; font-size:clamp(26px,3vw,36px); letter-spacing:-0.01em; }
+  .section-link{ font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; border-bottom:1.5px solid var(--black); padding-bottom:2px; }
+
+  /* ---------- mangOS spotlight ---------- */
+  .spotlight{
+    background: var(--black); color: var(--white); border-radius:20px;
+    padding:64px; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .spotlight::before{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(circle at 85% 20%, rgba(255,106,19,0.16), transparent 55%);
+  }
+  .spotlight-content{ position:relative; z-index:1; }
+  .spotlight-eyebrow{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:12px;
+    letter-spacing:0.06em; color: var(--mango); text-transform:uppercase; margin-bottom:20px;
+  }
+  .spotlight-logo{ display:flex; align-items:center; gap:10px; margin-bottom:22px; }
+  .spotlight-logo svg{ width:28px; height:28px; }
+  .spotlight-logo span{ font-family:var(--font-display); font-weight:600; font-size:26px; }
+  .spotlight-logo span em{ font-style:normal; color: var(--mango); }
+  .spotlight-content p{ color:#C9C4BA; font-size:16px; max-width:420px; margin-bottom:28px; }
+  .spotlight-tags{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+  .tag{
+    font-family:var(--font-mono); font-size:12px; padding:6px 12px; border-radius:100px;
+    border:1px solid #33291B; color:#D9C9B6;
+  }
+  .spotlight-visual{ position:relative; z-index:1; }
+  .mockup-mini{ border-radius:12px; overflow:hidden; border:1px solid #2A241C; background:#151210; }
+  .mockup-mini-bar{ display:flex; gap:6px; padding:10px 14px; background:#1C1712; }
+  .mockup-mini-dot{ width:8px; height:8px; border-radius:50%; }
+  .mockup-mini-body{ padding:22px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .mockup-mini-app{ width:100%; aspect-ratio:1; border-radius:9px; }
+
+  /* ---------- product family grid ---------- */
+  .product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .product-card{
+    border:1px solid var(--line); border-radius:16px; padding:28px; background: var(--white);
+    transition: transform .2s, box-shadow .2s; display:flex; flex-direction:column; height:100%;
+  }
+  .product-card:hover{ transform:translateY(-4px); box-shadow:0 20px 40px -20px rgba(0,0,0,0.15); }
+  .product-badge{ width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:20px; }
+  .product-card h3{ font-family:var(--font-display); font-weight:600; font-size:18px; margin-bottom:8px; }
+  .product-card p{ color: var(--gray); font-size:14px; margin-bottom:20px; flex-grow:1; }
+  .product-card .card-link{ font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:5px; }
+
+  /* ---------- newsroom ---------- */
+  .news-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .news-card{
+    border:1px solid var(--line); border-radius:16px; padding:28px; background: var(--white);
+    display:flex; flex-direction:column; gap:14px; transition: border-color .2s;
+  }
+  .news-card:hover{ border-color: var(--black); }
+  .news-meta{ display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:12px; color: var(--gray); }
+  .news-tag-dot{ width:8px; height:8px; border-radius:50%; }
+  .news-card h4{ font-family:var(--font-display); font-weight:600; font-size:19px; line-height:1.3; }
+  .news-card .card-link{ font-size:13px; font-weight:600; margin-top:auto; }
+
+  /* ---------- company / mission ---------- */
+  .company-inner{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+  .company-copy p{ color: var(--gray); font-size:16px; margin-top:18px; max-width:440px; }
+  .stat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background: var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .stat-cell{ background: var(--white); padding:32px 28px; }
+  .stat-num{ font-family:var(--font-display); font-weight:700; font-size:34px; margin-bottom:6px; }
+  .stat-num.c-red{ color: var(--red); }
+  .stat-num.c-blue{ color: var(--blue); }
+  .stat-num.c-yellow{ color:#B8850E; }
+  .stat-num.c-black{ color: var(--black); }
+  .stat-label{ font-size:13px; color: var(--gray); }
+
+  .card-link svg{ width:12px; height:12px; }
+
+  /* ---------- footer ---------- */
+  footer{ background: var(--black); color: #EDEBE4; padding:72px 0 32px; }
+  .footer-top{
+    display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:32px;
+    padding-bottom:56px; border-bottom:1px solid #262420;
+  }
+  .footer-brand p{ color:#9C978A; font-size:13.5px; margin-top:14px; max-width:230px; }
+  .footer-brand .logo-text{ color: var(--white); }
+  .footer-col h5{ font-family:var(--font-mono); font-size:12px; letter-spacing:0.05em; text-transform:uppercase; color:#8B867A; margin-bottom:18px; }
+  .footer-col ul{ display:flex; flex-direction:column; gap:12px; }
+  .footer-col a{ font-size:14px; color:#C9C4BA; transition:color .18s; }
+  .footer-col a:hover{ color: var(--yellow); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:28px; flex-wrap:wrap; gap:16px; }
+  .footer-bottom p{ font-size:13px; color:#7D786C; }
+  .social-row{ display:flex; gap:10px; }
+  .social-btn{
+    width:36px; height:36px; border-radius:8px; border:1px solid #2C2A25;
+    display:flex; align-items:center; justify-content:center; color:#C9C4BA; font-size:12px;
+    font-family:var(--font-mono); transition: all .18s;
+  }
+  .social-btn:hover{ border-color: var(--yellow); color: var(--yellow); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px){
+    .nav-links{ display:none; }
+    .menu-toggle{ display:block; }
+    .spotlight{ grid-template-columns:1fr; padding:40px; }
+    .product-grid{ grid-template-columns:repeat(2,1fr); }
+    .news-grid{ grid-template-columns:1fr; }
+    .company-inner{ grid-template-columns:1fr; }
+    .footer-top{ grid-template-columns:repeat(2,1fr); }
+    .hero-cluster{ width:340px; opacity:0.5; }
+  }
+  @media (max-width: 560px){
+    .wrap{ padding:0 20px; }
+    .hero{ padding:70px 0 50px; }
+    .product-grid{ grid-template-columns:1fr; }
+    .stat-grid{ grid-template-columns:1fr; }
+    .footer-top{ grid-template-columns:1fr; gap:32px; }
+    .footer-bottom{ flex-direction:column; align-items:flex-start; }
+    .section{ padding:60px 0; }
+    .section-head{ flex-direction:column; align-items:flex-start; }
+    .mockup-mini-body{ grid-template-columns:repeat(3,1fr); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">
+      <svg height="140" viewBox="-1 5 20 20" width="140" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#0E0E10" d="M 1 16 Q 2.5 22 9.996 22.237 Q 16.5 22 18 16 L 1 16 M 1.586 16.542 L 1.586 16.542 L 17.405 16.458 Q 16.015 21.212 10.004 21.753 Q 3.226 21.351 1.591 16.541 M 13.012 17.237 L 13.012 17.876 L 2.192 17.876 Q 2.026 17.59 1.865 17.238 L 13.012 17.237 M 9.954 18.71 L 9.954 19.405 L 3.4 19.4 Q 3.069 19.092 2.763 18.712 L 9.955 18.71 M 7.7 20.378 L 7.7 21.036 L 6.142 21.025 Q 5.302 20.717 4.733 20.38 L 7.702 20.378 z"></path>
+        <path fill="#E8412C" d="M 1.5 16 L 1.5 12.35 Q 1.5 12 2 12 L 6.1 12 Q 6.5 12 6.5 12.35 L 6.5 16 Z"></path>
+        <path fill="#FFC93C" d="M 5.7 16 L 9 10.3 Q 9.5 9.5 10 10.3 L 13.3 16 Z"></path>
+        <path fill="#2E5EFF" d="M 17.5 16 A 1 1 0 0 0 11.8 13.4 L 13.3 16 Z"></path>
+      </svg>
+      <span class="logo-text">Fruit Salad Systems</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#mangos">mangOS</a></li>
+      <li><a href="#newsroom">Newsroom</a></li>
+      <li><a href="#company">Company</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="mangos.html" class="btn btn-primary">Explore mangOS</a>
+      <button class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <svg class="hero-cluster brand-mark" viewBox="0 0 400 400" fill="none">
+    <circle cx="160" cy="150" r="110" opacity="0.85"/>
+    <circle cx="270" cy="140" r="90" opacity="0.85"/>
+    <circle cx="205" cy="255" r="95" opacity="0.85"/>
+    <circle cx="160" cy="150" r="110" stroke="#0E0E10" stroke-width="1.5"/>
+    <circle cx="270" cy="140" r="90" stroke="#0E0E10" stroke-width="1.5"/>
+    <circle cx="205" cy="255" r="95" stroke="#0E0E10" stroke-width="1.5"/>
+  </svg>
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="dot-divider"><span></span><span></span><span></span></span> Fruit Salad Systems</span>
+    <h1 class="hero-title">Different products. <span class="hl-red">One</span> standard for how software should <span class="hl-blue">feel</span>.</h1>
+    <p class="hero-sub">Fruit Salad Systems builds operating systems, tools, and services for people who'd rather their technology stay out of the way &mdash; starting with mangOS.</p>
+    <div class="hero-ctas">
+      <a href="mangos.html" class="btn btn-primary">Explore mangOS</a>
+      <a href="#newsroom" class="btn btn-outline">Read the newsroom</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mangos">
+  <div class="wrap">
+    <div class="spotlight">
+      <div class="spotlight-content">
+        <span class="spotlight-eyebrow">&#9679; Flagship product</span>
+        <div class="spotlight-logo">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#FF6A13" stroke-width="1.5"/><circle cx="16" cy="16" r="4" fill="#FF6A13"/></svg>
+          <span>mang<em>OS</em></span>
+        </div>
+        <p>An operating system built for how you actually work. Fast to boot, quiet in the background, and honest about what it's doing.</p>
+        <div class="spotlight-tags">
+          <span class="tag">Instant boot</span>
+          <span class="tag">Adaptive workspaces</span>
+          <span class="tag">Privacy by default</span>
+        </div>
+        <a href="mangos.html" class="btn btn-primary" style="border-color:#FF6A13; background:#FF6A13;">Visit mangOS</a>
+      </div>
+      <div class="spotlight-visual">
+        <div class="mockup-mini">
+          <div class="mockup-mini-bar">
+            <div class="mockup-mini-dot" style="background:#FF6A13"></div>
+            <div class="mockup-mini-dot" style="background:#FFB25C"></div>
+            <div class="mockup-mini-dot" style="background:#C9520E"></div>
+          </div>
+          <div class="mockup-mini-body" id="miniGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="section-label"><span class="dot-divider"><span></span><span></span><span></span></span> The family</span>
+        <h2 class="section-title">Four products, each owned by a small team.</h2>
+      </div>
+    </div>
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-badge" style="background:#FFE9DA;"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#FF6A13"/></svg></div>
+        <h3>mangOS</h3>
+        <p>The operating system Fruit Salad Systems is built around. Fast, adaptive, and out of your way.</p>
+        <a href="mangos.html" class="card-link">Visit mangOS &rarr;</a>
+      </div>
+      <div class="product-card">
+        <div class="product-badge" style="background:#E4EAFF;"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#2E5EFF"/></svg></div>
+        <h3>Papaya Cloud</h3>
+        <p>Storage and compute for teams who'd rather not think about infrastructure.</p>
+        <a href="#" class="card-link">Learn more &rarr;</a>
+      </div>
+      <div class="product-card">
+        <div class="product-badge" style="background:#FCE1DC;"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#E8412C"/></svg></div>
+        <h3>Guava Studio</h3>
+        <p>Creative tools for design, video, and sound, built for people who ship fast.</p>
+        <a href="#" class="card-link">Learn more &rarr;</a>
+      </div>
+      <div class="product-card">
+        <div class="product-badge" style="background:#FFF3D6;"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="#FFC93C"/></svg></div>
+        <h3>Kiwi Pay</h3>
+        <p>Payments that settle in seconds, built into every Fruit Salad Systems product.</p>
+        <a href="#" class="card-link">Learn more &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="newsroom">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="section-label"><span class="dot-divider"><span></span><span></span><span></span></span> Newsroom</span>
+        <h2 class="section-title">What's happening at Fruit Salad Systems.</h2>
+      </div>
+      <a href="#" class="section-link">View all news &rarr;</a>
+    </div>
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="news-meta"><span class="news-tag-dot" style="background:#FF6A13;"></span>mangOS &middot; July 2, 2026</div>
+        <h4>mangOS 2.4 &ldquo;Ripe&rdquo; ships with adaptive workspaces</h4>
+        <a href="mangos.html" class="card-link">Read more &rarr;</a>
+      </div>
+      <div class="news-card">
+        <div class="news-meta"><span class="news-tag-dot" style="background:#0E0E10;"></span>Company &middot; June 18, 2026</div>
+        <h4>Fruit Salad Systems opens a new campus in Lisbon</h4>
+        <a href="#" class="card-link">Read more &rarr;</a>
+      </div>
+      <div class="news-card">
+        <div class="news-meta"><span class="news-tag-dot" style="background:#2E5EFF;"></span>Papaya Cloud &middot; June 3, 2026</div>
+        <h4>Papaya Cloud expands into three new regions</h4>
+        <a href="#" class="card-link">Read more &rarr;</a>
+      </div>
+      <div class="news-card">
+        <div class="news-meta"><span class="news-tag-dot" style="background:#0E0E10;"></span>Company &middot; May 22, 2026</div>
+        <h4>Fruit Salad Systems named among this year's most innovative software companies</h4>
+        <a href="#" class="card-link">Read more &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="company">
+  <div class="wrap">
+    <div class="company-inner">
+      <div class="company-copy">
+        <span class="section-label"><span class="dot-divider"><span></span><span></span><span></span></span> Company</span>
+        <h2 class="section-title">Small teams, shipped products.</h2>
+        <p>Fruit Salad Systems is a small collection of independent product teams united by one idea: software should be obvious, fast, and honest about what it's doing. mangOS is where that idea started. It won't be where it ends.</p>
+        <a href="#" class="section-link" style="margin-top:24px; display:inline-flex;">Learn about our values &rarr;</a>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-cell"><p class="stat-num c-red">2019</p><p class="stat-label">Founded</p></div>
+        <div class="stat-cell"><p class="stat-num c-blue">4</p><p class="stat-label">Products shipped</p></div>
+        <div class="stat-cell"><p class="stat-num c-yellow">60+</p><p class="stat-label">Countries served</p></div>
+        <div class="stat-cell"><p class="stat-num c-black">1</p><p class="stat-label">Shared design system</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <svg class="logo-mark brand-mark" viewBox="0 0 40 40" fill="none">
+            <circle cx="16" cy="16" r="11" opacity="0.9"/>
+            <circle cx="26" cy="15" r="9" opacity="0.9"/>
+            <circle cx="20" cy="26" r="9" opacity="0.9"/>
+          </svg>
+          <span class="logo-text">Fruit Salad Systems</span>
+        </div>
+        <p>The company behind mangOS, Papaya Cloud, Guava Studio, and Kiwi Pay.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Products</h5>
+        <ul>
+          <li><a href="mangos.html">mangOS</a></li>
+          <li><a href="#">Papaya Cloud</a></li>
+          <li><a href="#">Guava Studio</a></li>
+          <li><a href="#">Kiwi Pay</a></li>
+          <li><a href="#products">Compare products</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#company">About</a></li>
+          <li><a href="#newsroom">Newsroom</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Investor relations</a></li>
+          <li><a href="#">Sustainability</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <ul>
+          <li><a href="#">Contact us</a></li>
+          <li><a href="#">System status</a></li>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of use</a></li>
+          <li><a href="#">Legal</a></li>
+          <li><a href="#">Site map</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Fruit Salad Systems. All rights reserved.</p>
+      <div class="social-row">
+        <a class="social-btn" href="#" aria-label="GitHub">GH</a>
+        <a class="social-btn" href="#" aria-label="X (Twitter)">X</a>
+        <a class="social-btn" href="#" aria-label="LinkedIn">LI</a>
+        <a class="social-btn" href="#" aria-label="Instagram">IG</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const shades = ['#FF6A13','#FFB25C','#C9520E','#33291B','#FF6A13','#FFB25C','#C9520E','#33291B'];
+  const miniGrid = document.getElementById('miniGrid');
+  shades.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'mockup-mini-app';
+    d.style.background = c;
+    miniGrid.appendChild(d);
+  });
+
+  const toggle = document.querySelector('.menu-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  toggle.addEventListener('click', () => {
+    const open = navLinks.style.display === 'flex';
+    navLinks.style.display = open ? 'none' : 'flex';
+    navLinks.style.cssText += open ? '' : 'position:absolute; top:66px; left:0; right:0; flex-direction:column; background:var(--white); padding:20px 32px; border-bottom:1px solid var(--line); gap:16px;';
+  });
+</script>
+
+</body>
+</html>
